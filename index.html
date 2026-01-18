@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🎯</div>
+                <div>
+                    <h1>Project Management Hub</h1>
+                    <p>Your central workspace for managing projects, tracking tasks, and staying organized</p>
+                </div>
+            </div>
+            <button class="hamburger" id="menuToggle">☰</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ================================
+             DASHBOARD VIEW (Page 1)
+             ================================ -->
+        <div id="dashboard-view" class="view active">
+            <div class="page-header">
+                <h2>📊 Management</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-icon" onclick="exportData()" title="Export Data">
+                        <span>📥</span> Export
+                    </button>
+                    <button class="btn btn-secondary btn-icon" onclick="document.getElementById('import-file').click()" title="Import Data">
+                        <span>📤</span> Import
+                    </button>
+                    <input type="file" id="import-file" accept=".json" style="display:none">
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="management-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h3>📁 Projects</h3>
+                        <span class="count-badge" id="projects-count">0</span>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="openProjectModal()">
+                        <span>+</span> Add Project
+                    </button>
+                </div>
+                <div class="section-content">
+                    <div id="projects-preview" class="preview-grid"></div>
+                    <button class="btn-link" onclick="navigateTo('#/projects')">
+                        View All Projects →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Courses Section -->
+            <div class="management-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h3>📚 Courses</h3>
+                        <span class="count-badge" id="courses-count">0</span>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="navigateTo('#/courses')">
+                        <span>+</span> Add Course
+                    </button>
+                </div>
+                <div class="section-content">
+                    <div id="courses-preview" class="preview-grid"></div>
+                    <button class="btn-link" onclick="navigateTo('#/courses')">
+                        View All Courses →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================
+             PROJECTS LIST VIEW
+             ================================ -->
+        <div id="projects-view" class="view">
+            <div class="page-header">
+                <div>
+                    <button class="btn btn-back" onclick="navigateTo('#/')">← Back</button>
+                    <h2>📁 All Projects</h2>
+                </div>
+                <button class="btn btn-primary" onclick="openProjectModal()">
+                    <span>+</span> Add Project
+                </button>
+            </div>
+
+            <div class="projects-grid" id="projects-grid"></div>
+        </div>
+
+        <!-- ================================
+             PROJECT DETAIL VIEW (Page 2)
+             ================================ -->
+        <div id="project-detail-view" class="view">
+            <div class="page-header">
+                <button class="btn btn-back" onclick="navigateTo('#/projects')">← Back to Projects</button>
+            </div>
+
+            <!-- Project Header -->
+            <div class="project-detail-header" id="project-detail-header"></div>
+
+            <!-- Timeline Section -->
+            <div class="timeline-section">
+                <div class="section-header">
+                    <h3>📅 Project Timeline</h3>
+                    <button class="btn btn-primary" onclick="openUpdateModal()">
+                        <span>+</span> Add Update
+                    </button>
+                </div>
+                <div class="timeline" id="project-timeline"></div>
+            </div>
+        </div>
+
+        <!-- ================================
+             COURSES VIEW (Page 2 - Courses)
+             ================================ -->
+        <div id="courses-view" class="view">
+            <div class="page-header">
+                <div>
+                    <button class="btn btn-back" onclick="navigateTo('#/')">← Back</button>
+                    <h2>📚 Courses - Top 10 to Complete</h2>
+                </div>
+                <div class="course-badge">
+                    Total Courses: <span id="total-courses-badge">0</span>
+                </div>
+            </div>
+
+            <!-- Add Course Form -->
+            <div class="add-course-card">
+                <h3>Add New Course</h3>
+                <form id="course-form" class="course-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Course Name / Skill *</label>
+                            <input type="text" id="course-name" placeholder="e.g., JavaScript Advanced" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Where Available *</label>
+                            <input type="text" id="course-platform" placeholder="e.g., Udemy, YouTube" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Link (Optional)</label>
+                            <input type="url" id="course-link" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Videos *</label>
+                            <input type="number" id="course-total" min="1" placeholder="e.g., 50" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-wide">
+                        <span>+</span> Add Course
+                    </button>
+                </form>
+            </div>
+
+            <!-- Courses Table -->
+            <div class="courses-table-container">
+                <h3 class="section-subtitle">My Learning Journey</h3>
+                <div class="table-responsive">
+                    <table class="courses-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>COURSE NAME / SKILLS</th>
+                                <th>PLATFORM</th>
+                                <th>LINK</th>
+                                <th>TOTAL</th>
+                                <th>COMPLETED</th>
+                                <th>% DONE</th>
+                                <th>% LEFT</th>
+                                <th>UPDATE</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courses-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================================
+         MODALS
+         ================================ -->
+    
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="project-modal-title">Add New Project</h3>
+                <button class="modal-close" onclick="closeProjectModal()">×</button>
+            </div>
+            <form id="project-form">
+                <input type="hidden" id="edit-project-id">
+                <div class="form-group">
+                    <label>Project Name *</label>
+                    <input type="text" id="project-name" placeholder="Enter project name" required>
+                </div>
+                <div class="form-group">
+                    <label>Description / Summary *</label>
+                    <textarea id="project-description" rows="4" placeholder="Describe your project" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Future Work</label>
+                    <textarea id="project-future" rows="3" placeholder="What's planned for the future?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Progress (%)</label>
+                    <input type="range" id="project-progress" min="0" max="100" value="0">
+                    <div class="progress-value"><span id="progress-display">0</span>%</div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save Project</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div id="update-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="update-modal-title">Add Update</h3>
+                <button class="modal-close" onclick="closeUpdateModal()">×</button>
+            </div>
+            <form id="update-form">
+                <input type="hidden" id="edit-update-id">
+                <div class="form-group">
+                    <label>Update / Summary *</label>
+                    <textarea id="update-text" rows="4" placeholder="Describe what you've accomplished" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date & Time *</label>
+                        <input type="datetime-local" id="update-timestamp" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time Spent</label>
+                        <input type="text" id="update-time-spent" placeholder="e.g., 2 hours">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Attachments (Images, PDF, Word, PPT)</label>
+                    <div class="file-upload-zone" id="file-upload-zone">
+                        <input type="file" id="update-files" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" hidden>
+                        <div class="upload-icon">📎</div>
+                        <p>Click or drag files here</p>
+                        <span class="upload-hint">Images, PDF, Word, PowerPoint supported</span>
+                    </div>
+                    <div id="files-preview" class="files-preview"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save Update</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attachment Preview Modal -->
+    <div id="attachment-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="attachment-title">Attachment</h3>
+                <button class="modal-close" onclick="closeAttachmentModal()">×</button>
+            </div>
+            <div id="attachment-content" class="attachment-preview"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
